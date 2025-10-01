@@ -5,25 +5,33 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
+
+// Enable CORS for all origins
 app.use(cors({ origin: '*', credentials: true }));
-const PORT = process.env.PORT || 3000;
+
+// Parse incoming JSON requests
 app.use(express.json());
 
-// Health / root route so GET / doesn't return 404 on platforms like Vercel
+// Prevent favicon 404 noise
+app.get('/favicon.ico', (req, res) => res.sendStatus(204));
+
+// Root / health check route
 app.get('/', (req, res) => {
-    res.status(200).send('Portfolio-backend API is running');
+  res.status(200).send('Portfolio-backend API is running ✅');
 });
 
+// API routes
 app.use('/api/v1', userrouter);
 
-// Try to connect to DB on startup (works for local and serverless cold start)
+// Connect to Database with retry mechanism
 dbConnect();
 
-// Start server only when running directly (local dev)
+// Start server only when running locally (Vercel handles serverless deployment)
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`Your server is Active on PORT:${PORT}`);
-    });
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is active on PORT: ${PORT}`);
+  });
 }
 
 module.exports = app;
