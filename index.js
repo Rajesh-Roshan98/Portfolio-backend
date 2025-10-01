@@ -5,7 +5,16 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
-app.use(cors({ origin: ['http://localhost:5173', 'https://raj-portfolio-qidap4v5v-rajesh-roshans-projects.vercel.app/'], credentials: true }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://raj-portfolio-one-green.vercel.app"
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+  })
+);
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
