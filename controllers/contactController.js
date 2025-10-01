@@ -4,7 +4,6 @@ const dbConnect = require('../config/dbConnect'); // ✅ Import DB connect
 
 const createContact = async (req, res) => {
   const { name, email, message } = req.body;
-  const requestId = req.requestId || 'none';
 
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'All fields are required.' });
@@ -20,19 +19,11 @@ const createContact = async (req, res) => {
 
     res.status(201).json({
       message: 'Contact message submitted successfully & email sent.',
-      requestId,
     });
   } catch (error) {
-    console.error(JSON.stringify({
-      event: 'contact_submission_error',
-      requestId,
-      error: error.message,
-      stack: error.stack,
-      body: { name, email, message }
-    }));
+    console.error('Contact submission error:', error);
     res.status(500).json({
       error: error.message || 'Server error',
-      requestId,
     });
   }
 };
